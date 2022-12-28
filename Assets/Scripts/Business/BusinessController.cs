@@ -20,6 +20,11 @@ public class BusinessController
         _businessModel.TryExecuteIncome();
     }
 
+    public void InitPlayer(PlayerController playerController)
+    {
+        _playerController = playerController;
+    }
+
     private void OnModelChanged(BusinessModel model)
     {
         _businessView.Render(model);
@@ -34,11 +39,6 @@ public class BusinessController
     private void SaveData(BusinessModel model)
     {
         BusinessDataSaver.SaveBusiness(model);
-    }
-
-    public void InitPlayer(PlayerController playerController)
-    {
-        _playerController = playerController;
     }
 
     private void TryBuyNewLevel()

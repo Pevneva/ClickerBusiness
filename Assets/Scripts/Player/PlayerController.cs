@@ -2,11 +2,9 @@ public class PlayerController
 {
     private readonly PlayerModel _playerModel;
     private readonly PlayerView _playerView;
-    // private PlayerDataSaver _playerDataSaver;
 
     public PlayerController(PlayerModel model, PlayerView view)
     {
-        // _playerDataSaver = new PlayerDataSaver();
         _playerModel = model;
         _playerView = view;
         _playerModel.BalanceUpdated += _playerView.SetBalance;

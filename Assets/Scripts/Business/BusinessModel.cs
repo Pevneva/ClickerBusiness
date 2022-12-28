@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public class BusinessModel
 {
@@ -10,7 +9,6 @@ public class BusinessModel
 
     public string Name { get; }
     public bool IsIncoming { get; private set; }
-
     public string NameUpgrade1 { get; }
     public string NameUpgrade2 { get; }
     public BusinessNumber Number { get; }
@@ -27,8 +25,8 @@ public class BusinessModel
     public BusinessModel(BusinessData businessData)
     {
         Name = businessData.Name;
-        NameUpgrade1 = businessData.Upgrade_1Name;
-        NameUpgrade2 = businessData.Upgrade_2Name;
+        NameUpgrade1 = businessData.Upgrade1Name;
+        NameUpgrade2 = businessData.Upgrade2Name;
         Number = businessData.BusinessNumber;
         Level = businessData.LevelNumber;
         _baseIncome = businessData.BaseIncome;

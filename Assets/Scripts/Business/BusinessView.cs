@@ -38,7 +38,7 @@ public class BusinessView : MonoBehaviour
         _cost.text = "cost:" + model.Cost + "$";
         _upgradeView1.Render(model.Upgrade1, model.NameUpgrade1);
         _upgradeView2.Render(model.Upgrade2, model.NameUpgrade2);
-        
+
         if (model.IsIncoming == false)
             _incomeProgress.gameObject.SetActive(false);
         else if (_incomeProgressTween == null)
@@ -47,20 +47,21 @@ public class BusinessView : MonoBehaviour
 
     public void ExecuteIncomeProgress(float incomeDelay)
     {
-        Debug.Log("=== ExecuteIncomeProgress === AAA");
         _incomeProgressTween.Kill();
         _incomeProgress.gameObject.SetActive(true);
-        _incomeProgressTween = _incomeProgress.DOValue(1, incomeDelay * (1 - _incomeProgress.value)).SetEase(Ease.Linear).OnComplete(() =>
-        {
-            IncomeProgressFinished?.Invoke();
-            _incomeProgress.value = 0;
-            ExecuteIncomeProgress(incomeDelay);
-        });
+        _incomeProgressTween = _incomeProgress.DOValue(1, incomeDelay * (1 - _incomeProgress.value))
+            .SetEase(Ease.Linear).OnComplete(() =>
+            {
+                IncomeProgressFinished?.Invoke();
+                _incomeProgress.value = 0;
+                ExecuteIncomeProgress(incomeDelay);
+            });
     }
 
-    private void OnApplicationQuit()
+    private void OnApplicationFocus(bool hasFocus)
     {
-        ApplicationQuit?.Invoke(_incomeProgress.value);
+        if (hasFocus == false)
+            ApplicationQuit?.Invoke(_incomeProgress.value);
     }
 
     public void SetStartProgress(float value)

@@ -2,8 +2,9 @@ using System;
 
 public class PlayerModel
 {
-    public float Balance { get; private set; }
     private int _startBalance;
+
+    public float Balance { get; private set; }
 
     public event Action<float> BalanceUpdated;
 
