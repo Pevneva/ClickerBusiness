@@ -52,9 +52,9 @@ public class BusinessView : MonoBehaviour
         _incomeProgressTween = _incomeProgress.DOValue(1, incomeDelay * (1 - _incomeProgress.value))
             .SetEase(Ease.Linear).OnComplete(() =>
             {
-                IncomeProgressFinished?.Invoke();
                 _incomeProgress.value = 0;
                 ExecuteIncomeProgress(incomeDelay);
+                IncomeProgressFinished?.Invoke();
             });
     }
 

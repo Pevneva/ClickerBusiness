@@ -2,13 +2,14 @@ public class BusinessController
 {
     private readonly BusinessModel _businessModel;
     private readonly BusinessView _businessView;
+    private readonly BusinessSavedData _businessSavedData = new BusinessSavedData();
     private PlayerController _playerController;
 
     public BusinessController(BusinessModel businessModel, BusinessView businessView)
     {
         _businessModel = businessModel;
         _businessView = businessView;
-        _businessView.SetStartProgress(BusinessDataSaver.LoadProgress(_businessModel));
+        _businessView.SetStartProgress(GetBusinessProgressValue());
         _businessView.Render(_businessModel);
         _businessView.IncreaseLevelButtonClicked += TryBuyNewLevel;
         _businessView.Upgrade1ButtonClicked += TryBuyUpgrade1;
@@ -25,20 +26,25 @@ public class BusinessController
         _playerController = playerController;
     }
 
+    private float GetBusinessProgressValue()
+    {
+        BusinessSavedData savedData =
+            SaveManager.Load<BusinessSavedData>(ParamsController.BusinessPrefKey + _businessModel.Number);
+        return savedData.ProgressValue;
+    }
+
     private void OnModelChanged(BusinessModel model)
     {
         _businessView.Render(model);
-        SaveData(model);
     }
 
     private void SaveProgress(float value)
     {
-        BusinessDataSaver.SaveProgress(value, _businessModel);
-    }
-
-    private void SaveData(BusinessModel model)
-    {
-        BusinessDataSaver.SaveBusiness(model);
+        _businessSavedData.Level = _businessModel.Level;
+        _businessSavedData.IsBoughtUpgrade1 = _businessModel.Upgrade1.IsBought;
+        _businessSavedData.IsBoughtUpgrade2 = _businessModel.Upgrade2.IsBought;
+        _businessSavedData.ProgressValue = value;
+        SaveManager.Save(ParamsController.BusinessPrefKey + _businessModel.Number, _businessSavedData);
     }
 
     private void TryBuyNewLevel()

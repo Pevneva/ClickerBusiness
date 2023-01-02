@@ -71,6 +71,19 @@ public class BusinessModel
         Income = CalculateIncome(_baseIncome, Level);
         ModelChanged?.Invoke(this);
     }
+    
+    public static BusinessModel TryLoadBusinessData(BusinessData businessData)
+    {
+        BusinessSavedData loadedBusinessSavedData = SaveManager.Load<BusinessSavedData>(ParamsController.BusinessPrefKey + businessData.BusinessNumber);
+        if (loadedBusinessSavedData.Level > 0)
+        {
+            businessData.LevelNumber = loadedBusinessSavedData.Level;
+            businessData.Upgrade1.IsBought = loadedBusinessSavedData.IsBoughtUpgrade1;
+            businessData.Upgrade2.IsBought = loadedBusinessSavedData.IsBoughtUpgrade2;
+        }
+
+        return new BusinessModel(businessData);
+    }
 
     private float CalculateIncome(int baseIncome, int level)
     {

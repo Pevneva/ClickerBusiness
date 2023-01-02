@@ -13,13 +13,19 @@ public class PlayerModel
         Balance = startBalance;
     }
 
+    public static PlayerModel TryLoadPlayerData()
+    {
+        PlayerSavedData loadedPlayerSavedData = SaveManager.Load<PlayerSavedData>(ParamsController.PlayerKey);
+        return new PlayerModel(loadedPlayerSavedData.Balance);
+    }
+
     public void SpendMoney(float spentMoney)
     {
         Balance -= spentMoney;
 
         if (Balance < 0)
             Balance = 0;
-        
+
         BalanceUpdated?.Invoke(Balance);
     }
 

@@ -9,37 +9,24 @@ public class PlayerDashboard : MonoBehaviour
 
     private PlayerController _playerController;
     private List<BusinessController> _businessControllers;
-    
-    private void Start()
-    {
-        InitBusinesses();
-    }
-
-    private void InitBusinesses()
-    {
-        _businessControllers = new List<BusinessController>();
-        foreach (var data in _businessesData)
-        {
-            AddItem(data);
-        }
-    }
 
     public void Init(PlayerController playerController)
     {
         _playerController = playerController;
+        ShowBusinesses();
     }
-    
-    private void AddItem(BusinessData businessData)
+
+    private void ShowBusinesses()
+    {
+        _businessControllers = new List<BusinessController>();
+        foreach (var data in _businessesData)
+            InitItem(data);
+    }
+
+    private void InitItem(BusinessData businessData)
     {
         BusinessView view = Instantiate(_template, _container.transform);
-
-        if (BusinessDataSaver.LoadBusinessData(businessData.BusinessNumber, out int level, out bool upgrade1, out bool upgrade2))
-        {
-            businessData.LevelNumber = level;
-            businessData.Upgrade1.IsBought = upgrade1;
-            businessData.Upgrade2.IsBought = upgrade2;
-        };
-        BusinessController businessController = new BusinessController(new BusinessModel(businessData), view);
+        BusinessController businessController = new BusinessController(BusinessModel.TryLoadBusinessData(businessData), view);
         businessController.InitPlayer(_playerController);
         _businessControllers.Add(businessController);
     }
