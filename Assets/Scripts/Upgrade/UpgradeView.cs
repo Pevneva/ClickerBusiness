@@ -9,7 +9,7 @@ public class UpgradeView : MonoBehaviour
     [SerializeField] private GameObject _costLabel;
     [SerializeField] private GameObject _boughtLabel;
 
-    public void Render(Upgrade upgrade, string upgradeName)
+    public void Render(IUpgradeReadOnly upgrade, string upgradeName)
     {
         _name.text = upgradeName;
         _factor.text = "+" + upgrade.UpgradeFactor + "%";

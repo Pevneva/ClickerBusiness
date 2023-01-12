@@ -17,12 +17,6 @@ MonoBehaviour:
   _baseCost: 5000
   _baseIncome: 5000
   _levelNumber: 0
-  _upgrade1:
-    Cost: 100000
-    UpgradeFactor: 200
-    IsBought: 0
-  _upgrade2:
-    Cost: 500000
-    UpgradeFactor: 400
-    IsBought: 0
+  _upgrade1: {fileID: 11400000, guid: fb9bc10b8cd22a54c857b02459200791, type: 2}
+  _upgrade2: {fileID: 11400000, guid: 079880e325183b2499bd73f90b1dd2ce, type: 2}
   _businessNumber: 5

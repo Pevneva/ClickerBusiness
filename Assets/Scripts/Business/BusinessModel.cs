@@ -4,8 +4,8 @@ public class BusinessModel
 {
     private readonly int _baseIncome;
     private readonly int _baseCost;
-    private float _upgrade1Factor;
-    private float _upgrade2Factor;
+    private readonly Upgrade _upgrade1;
+    private readonly Upgrade _upgrade2;
 
     public string Name { get; }
     public bool IsIncoming { get; private set; }
@@ -16,8 +16,8 @@ public class BusinessModel
     public float Income { get; private set; }
     public float IncomeDelay { get; }
     public float Cost { get; private set; }
-    public Upgrade Upgrade1 { get; }
-    public Upgrade Upgrade2 { get; }
+    public IUpgradeReadOnly Upgrade1 => _upgrade1;
+    public IUpgradeReadOnly Upgrade2 => _upgrade2;
 
     public event Action<BusinessModel> ModelChanged;
     public event Action<float> IncomeStarted;
@@ -28,12 +28,25 @@ public class BusinessModel
         NameUpgrade1 = businessData.Upgrade1Name;
         NameUpgrade2 = businessData.Upgrade2Name;
         Number = businessData.BusinessNumber;
-        Level = businessData.LevelNumber;
         _baseIncome = businessData.BaseIncome;
         _baseCost = businessData.BaseCost;
         IncomeDelay = businessData.IncomeDelay;
-        Upgrade1 = businessData.Upgrade1;
-        Upgrade2 = businessData.Upgrade2;
+        _upgrade1 = businessData.Upgrade1;
+        _upgrade2 = businessData.Upgrade2;
+
+        BusinessData loadedBusinessData = TryLoadBusinessData(businessData);
+        if (loadedBusinessData != null)
+        {
+            Level = loadedBusinessData.LevelNumber;
+            _upgrade1.IsBought = loadedBusinessData.Upgrade1.IsBought;
+            _upgrade2.IsBought = loadedBusinessData.Upgrade2.IsBought;
+        }
+        else
+        {
+            Level = businessData.LevelNumber;
+            _upgrade1.IsBought = businessData.Upgrade1.IsBought;
+            _upgrade2.IsBought = businessData.Upgrade2.IsBought;
+        }
 
         Income = CalculateIncome(_baseIncome, Level);
         Cost = CalculateCost(_baseCost, Level);
@@ -60,35 +73,39 @@ public class BusinessModel
 
     public void DoUpgrade1()
     {
-        Upgrade1.IsBought = true;
+        _upgrade1.IsBought = true;
         Income = CalculateIncome(_baseIncome, Level);
         ModelChanged?.Invoke(this);
     }
 
     public void DoUpgrade2()
     {
-        Upgrade2.IsBought = true;
+        _upgrade2.IsBought = true;
         Income = CalculateIncome(_baseIncome, Level);
         ModelChanged?.Invoke(this);
     }
-    
-    public static BusinessModel TryLoadBusinessData(BusinessData businessData)
+
+    public static BusinessData TryLoadBusinessData(BusinessData businessData)
     {
-        BusinessSavedData loadedBusinessSavedData = SaveManager.Load<BusinessSavedData>(ParamsController.BusinessPrefKey + businessData.BusinessNumber);
+        BusinessSavedData loadedBusinessSavedData =
+            SaveManager.Load<BusinessSavedData>(ParamsController.BusinessPrefKey + businessData.BusinessNumber);
         if (loadedBusinessSavedData.Level > 0)
         {
             businessData.LevelNumber = loadedBusinessSavedData.Level;
             businessData.Upgrade1.IsBought = loadedBusinessSavedData.IsBoughtUpgrade1;
             businessData.Upgrade2.IsBought = loadedBusinessSavedData.IsBoughtUpgrade2;
+            return businessData;
         }
-
-        return new BusinessModel(businessData);
+        else
+        {
+            return null;
+        }
     }
 
     private float CalculateIncome(int baseIncome, int level)
     {
-        _upgrade1Factor = Upgrade1.IsBought ? Upgrade1.UpgradeFactor : 0;
-        _upgrade2Factor = Upgrade2.IsBought ? Upgrade2.UpgradeFactor : 0;
+        float _upgrade1Factor = _upgrade1.IsBought ? _upgrade1.UpgradeFactor : 0;
+        float _upgrade2Factor = Upgrade2.IsBought ? Upgrade2.UpgradeFactor : 0;
 
         return baseIncome * level * (1 + _upgrade1Factor / 100 + _upgrade2Factor / 100);
     }

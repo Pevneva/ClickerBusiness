@@ -26,7 +26,7 @@ public class PlayerDashboard : MonoBehaviour
     private void InitItem(BusinessData businessData)
     {
         BusinessView view = Instantiate(_template, _container.transform);
-        BusinessController businessController = new BusinessController(BusinessModel.TryLoadBusinessData(businessData), view);
+        BusinessController businessController = new BusinessController(new BusinessModel(businessData), view);
         businessController.InitPlayer(_playerController);
         _businessControllers.Add(businessController);
     }
