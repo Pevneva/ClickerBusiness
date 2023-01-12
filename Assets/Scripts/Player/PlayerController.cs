@@ -12,13 +12,6 @@ public class PlayerController
         _playerModel.BalanceUpdated += OnBalanceUpdated;
     }
 
-    private void OnBalanceUpdated(float value)
-    {
-        _playerView.SetBalance(value);
-        _playerSavedData.Balance = value;
-        SaveManager.Save(ParamsController.PlayerKey, _playerSavedData);
-    }
-
     public bool IsEnoughMoney(float cost)
     {
         return _playerModel.Balance >= cost;
@@ -32,5 +25,16 @@ public class PlayerController
     public void TakeIncome(float income)
     {
         _playerModel.EarnMoney(income);
+    }
+
+    public void OnApplicationQuit()
+    {
+        SaveManager.Save(ParamsController.PlayerKey, _playerSavedData);
+    }
+
+    private void OnBalanceUpdated(float value)
+    {
+        _playerView.SetBalance(value);
+        _playerSavedData.Balance = value;
     }
 }

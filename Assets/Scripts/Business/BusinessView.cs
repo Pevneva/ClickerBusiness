@@ -15,13 +15,16 @@ public class BusinessView : MonoBehaviour
     [SerializeField] private UpgradeView _upgradeView1;
     [SerializeField] private UpgradeView _upgradeView2;
 
+    private Tween _incomeProgressTween;
+
+    public float IncomeProgressValue => _incomeProgress.value;
+    
     public event Action IncreaseLevelButtonClicked;
     public event Action Upgrade1ButtonClicked;
     public event Action Upgrade2ButtonClicked;
     public event Action IncomeProgressFinished;
-    public event Action<float> ApplicationQuit;
+    // public event Action<float> ApplicationQuit;
 
-    private Tween _incomeProgressTween;
 
     private void Start()
     {
@@ -58,11 +61,11 @@ public class BusinessView : MonoBehaviour
             });
     }
 
-    private void OnApplicationFocus(bool hasFocus)
-    {
-        if (hasFocus == false)
-            ApplicationQuit?.Invoke(_incomeProgress.value);
-    }
+    // private void OnApplicationFocus(bool hasFocus)
+    // {
+    //     if (hasFocus == false)
+    //         ApplicationQuit?.Invoke(_incomeProgress.value);
+    // }
 
     public void SetStartProgress(float value)
     {

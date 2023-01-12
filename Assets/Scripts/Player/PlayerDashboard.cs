@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,9 +11,12 @@ public class PlayerDashboard : MonoBehaviour
     private PlayerController _playerController;
     private List<BusinessController> _businessControllers;
 
+    public event Action ApplicationQuit;
+
     public void Init(PlayerController playerController)
     {
         _playerController = playerController;
+        ApplicationQuit += _playerController.OnApplicationQuit;
         ShowBusinesses();
     }
 
@@ -29,5 +33,12 @@ public class PlayerDashboard : MonoBehaviour
         BusinessController businessController = new BusinessController(new BusinessModel(businessData), view);
         businessController.InitPlayer(_playerController);
         _businessControllers.Add(businessController);
+        ApplicationQuit += businessController.OnApplicationQuit;
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus == false)
+            ApplicationQuit?.Invoke();
     }
 }

@@ -9,6 +9,7 @@ public class Upgrade : ScriptableObject, IUpgradeReadOnly
 
     public float Cost => _cost;
     public float UpgradeFactor => _upgradeFactor;
+
     public bool IsBought
     {
         get { return _isBought; }

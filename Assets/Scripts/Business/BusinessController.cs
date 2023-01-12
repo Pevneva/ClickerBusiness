@@ -15,7 +15,6 @@ public class BusinessController
         _businessView.Upgrade1ButtonClicked += TryBuyUpgrade1;
         _businessView.Upgrade2ButtonClicked += TryBuyUpgrade2;
         _businessView.IncomeProgressFinished += AddEarnedMoney;
-        _businessView.ApplicationQuit += SaveProgress;
         _businessModel.ModelChanged += OnModelChanged;
         _businessModel.IncomeStarted += _businessView.ExecuteIncomeProgress;
         _businessModel.TryExecuteIncome();
@@ -24,6 +23,11 @@ public class BusinessController
     public void InitPlayer(PlayerController playerController)
     {
         _playerController = playerController;
+    }
+
+    public void OnApplicationQuit()
+    {
+        SaveProgress(_businessView.IncomeProgressValue);
     }
 
     private float GetBusinessProgressValue()

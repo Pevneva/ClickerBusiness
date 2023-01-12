@@ -14,7 +14,6 @@ public class UpgradeView : MonoBehaviour
         _name.text = upgradeName;
         _factor.text = "+" + upgrade.UpgradeFactor + "%";
         _cost.text = "cost:" + upgrade.Cost + "$";
-        
         _costLabel.SetActive(upgrade.IsBought == false);
         _boughtLabel.SetActive(upgrade.IsBought);
     }
